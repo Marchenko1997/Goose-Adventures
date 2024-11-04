@@ -32,27 +32,27 @@ print(PLAYER_IMAGES)
 
 player_size = (20, 20)
 player = pygame.image.load("player.png").convert_alpha()
-# player.fill(COLOR_BLACK)
 player_rect = player.get_rect()
-
+player_rect.center = main_display.get_rect().center
 player_move_down = [0, 4]
 player_move_right = [4, 0]
 player_move_left = [-4, 0]
 player_move_up = [0, -4]
 
 def create_enemy():
-    enemy_size = (30, 30)
     enemy = pygame.image.load("enemy.png").convert_alpha()
-    # enemy.fill(COLOR_BLUE)
-    enemy_rect = pygame.Rect(WIDTH, random.randint(0, HEIGHT - enemy_size[1]), *enemy_size)
+    enemy_rect = pygame.Rect(WIDTH,
+                            random.randint(enemy.get_height(), HEIGHT - enemy.get_height()),
+                            *enemy.get_size())
     enemy_move = [random.randint(-8, -4), 0]
     return [enemy, enemy_rect, enemy_move]
 
 def create_bonus():
-    bonus_size = (20, 20)
     bonus = pygame.image.load("bonus.png").convert_alpha()
-    # bonus.fill(COLOR_GREEN)
-    bonus_rect = pygame.Rect(random.randint(0, WIDTH - bonus_size[0]), 0, *bonus_size)
+    bonus_width = bonus.get_width()
+    bonus_rect = pygame.Rect(random.randint(bonus_width, WIDTH -bonus_width),
+                            -bonus.get_height(),
+                            *bonus.get_size())
     bonus_move = [0, random.randint(4, 8)]
     return [bonus, bonus_rect, bonus_move]
 
@@ -91,7 +91,6 @@ while playing:
             if image_index >= len(PLAYER_IMAGES):
                 image_index = 0
 
-    # main_display.fill(COLOR_BLACK)
 
     bg_X1 -= bg_move
     bg_X2 -= bg_move
@@ -134,7 +133,7 @@ while playing:
             score += 1
             bonuses.pop(bonuses.index(bonus))
 
-    enemies = [enemy for enemy in enemies if enemy[1].left > 0]
+    enemies = [enemy for enemy in enemies if enemy[1].right > 0]
 
     bonuses = [bonus for bonus in bonuses if bonus[1].top < HEIGHT]
 
